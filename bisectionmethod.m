@@ -1,37 +1,27 @@
-function bisectionmethod(f, a, b, TOL)
-% BISECTIONMETHOD  Approximate a root of f on [a, b] to within TOL.
-%
-%   bisectionmethod(f, a, b, TOL) prints, at each step, the iteration
-%   number k, the current left and right endpoints a and b, the midpoint
-%   c, and f(c). It then prints the final approximation.
-%
-%   Requires f(a) and f(b) to have opposite signs (Intermediate Value
-%   Theorem). The number of iterations is chosen so that the bracket
-%   width drops below TOL.
+% Problem 2. Bisection method M-file. Solves f(x) = 0 on [a, b] satisfying
+% |x_N - r| < TOL. Outputs step, a, b, c, f(c) at each iteration.
 
+function bisectionmethod(f, a, b, TOL)
     % Check input validity
     if f(a) * f(b) >= 0
         error('f(a) and f(b) must have opposite signs. No root guaranteed.');
     end
-
-    % Number of iterations needed to shrink [a, b] below TOL
+    % Compute iterations
     N = ceil(log2((b - a) / TOL));
 
     fprintf('Step,       a,             b,             c,             f(c)\n');
 
     for k = 1:N
-        c  = (a + b) / 2;
+        c = (a + b) / 2; % Midpoint
         fc = f(c);
-
+        % Print the current iteration details
         fprintf('%2d, %12.7f, %12.7f, %12.7f, %12.7f\n', k, a, b, c, fc);
-
-        % Early exit if we already meet the tolerance
+        % Check if the root is found within tolerance
         if abs(fc) < TOL
             fprintf('Root found at x = %.7f after %d iterations.\n', c, k);
             return;
         end
-
-        % Update bracket
+        % Update interval for the next iteration
         if f(a) * fc < 0
             b = c;
         else
